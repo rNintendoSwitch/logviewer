@@ -7,7 +7,6 @@ from jinja2 import Environment, PackageLoader
 from renderer import LogEntry 
 
 
-
 app = Sanic(__name__)
 
 app.static('/static', './static')
