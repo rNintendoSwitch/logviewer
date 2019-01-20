@@ -2,10 +2,29 @@ import os
 
 from sanic import Sanic, response
 from motor.motor_asyncio import AsyncIOMotorClient
+from jinja2 import Environment, PackageLoader
 
 from renderer import LogEntry 
 
+
+
 app = Sanic(__name__)
+
+app.static('/static', './static')
+
+jinja_env = Environment(loader=PackageLoader('app', 'templates'))
+
+def is_image_url(u):
+    image_types = ['.png', '.jpg', '.gif', '.jpeg', '.webp']
+    return any(urlparse(u.lower()).path.endswith(x) for x in image_types)
+
+
+def render_template(name, *args, **kwargs):
+    template = jinja_env.get_template(name + '.html')
+    kwargs.update(globals())
+    return response.html(template.render(*args, **kwargs))
+
+app.render_template = render_template
 
 @app.listener('before_server_start')
 async def init(app, loop):
@@ -15,16 +34,29 @@ async def init(app, loop):
 async def index(request):
     return response.text('Welcome! This simple website is used to display your modmail logs.')
 
+@app.get('/logs/raw/<key>')
+async def getrawlogsfile(request, key):
+    document = await app.db.logs.find_one({'key': key})
+
+    if document is None:
+        return response.text('Not Found', status=404)
+
+    log_entry = LogEntry(app, document)
+
+    return log_entry.render_plain_text()
+
 @app.get('/logs/<key>')
 async def getlogsfile(request, key):
     """Returned the plain text rendered log entry"""
 
-    log = await app.db.logs.find_one({'key': key})
+    document = await app.db.logs.find_one({'key': key})
 
-    if log is None:
+    if document is None:
         return response.text('Not Found', status=404)
-    else:
-        return response.text(str(LogEntry(log)))
+
+    log_entry = LogEntry(app, document)
+
+    return log_entry.render_html()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=os.getenv('PORT'))

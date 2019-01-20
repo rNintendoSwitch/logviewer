@@ -2,3 +2,6 @@ python-dateutil
 motor
 sanic
 dnspython
+natural
+jinja2
+markdown2
