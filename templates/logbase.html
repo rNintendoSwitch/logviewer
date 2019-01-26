@@ -24,65 +24,71 @@
                  alt="avatar">
         </div>
         <div class="info__metadata">
-            <div class="info__guild-name">Thread Logs {% if log_entry.open %}
+            <div class="info__guild-name"><span style='color:white'>Thread Logs</span> {% if log_entry.open %}
                 (Open){% else %}(Closed){% endif %}</div>
-            <div class="info__channel-name">Recipient:
-                <strong>{{ log_entry.recipient.name | e }}</strong>#{{ log_entry.recipient.discriminator }}
-                -
-                <small><code>{{ log_entry.recipient.id }}</code></small>
+            <div title="{{ log_entry.recipient.id }}" class="info__channel-topic tooltip"><span style="color:white">Recipient:
+                <b>{{ log_entry.recipient.name | e }}</b></span>#{{ log_entry.recipient.discriminator }}
+                <span class='tooltiptext pre pre--inline'>{{ log_entry.recipient.id }}</span>
             </div>
             {% if log_entry.recipient != log_entry.creator %}
-                <div class="info__channel-topic">Creator:
-                    <strong>{{ log_entry.creator.name | e }}</strong>#{{ log_entry.creator.discriminator }}
-                    -
-                    <small><code>{{ log_entry.creator.id }}</code></small>
+            <br>
+                <div class="info__channel-topic tooltip"><span style="color:white">Creator:
+                    <b>{{ log_entry.creator.name | e }}</span></b>#{{ log_entry.creator.discriminator }}
+                    <span class='tooltiptext pre pre--inline'>{{ log_entry.creator.id }}</span>
                 </div>
             {% endif %}
 
-            <div class="info__channel-message-count">{{ log_entry.messages | length }}
-                messages
+            <div class="info__channel-message-count">{{ log_entry.thread_messages | length }}
+                messages 
+                {% if log_entry.internal_messages %}
+                <button id='toggle' class='button' onclick="toggleInternalMessages()">Show Internal Messages</button>
+                {% endif %}
             </div>
         </div>
     </div>
 
     <div class="chatlog">
         {% for group in log_entry.message_groups %}
-            <div class="chatlog__message-group">
+            <div class="{{group.type}} chatlog__message-group">
                 <div class="chatlog__author-avatar-container">
-                    {% if group.type == 'thread_message' %}
                         <img class="chatlog__author-avatar"
                              src="{{ group.author.avatar_url }}"
                              onerror="this.src='{{ group.author.default_avatar_url }}'"
-                             alt="avatar">
-                    {% else %}
-                        <img class="chatlog__author-avatar"
-                             src="{{ log_entry.system_avatar_url }}" alt="avatar">
-                    {% endif %}
+                             alt="avatar"/>
                 </div>
 
                 <div class="chatlog__messages">
                     <span class="chatlog__author-name" title="{{ group.author | string | e }}">{{ group.author.name | e }}</span>
-
                     {% if group.type == 'thread_message' %}
-                        {% if group.author.mod %}
-                            <span class="mod-tag">Mod</span>
-                        {% endif %}
+                    {% if group.author.mod %}
+                        <span class="mod-tag">Reply</span>
+                    {% endif %}
+                    {% elif group.type == 'anonymous' %}
+                    <span class='mod-tag'>Anon</span>
+                    {% elif group.type == 'internal' %}
+                    <span class='internal-tag'>Internal</span>
                     {% else %}
-                        <span>took a note</span>
-                        <span class="system-tag">System</span>
+                        <span>took a note</span><span class="system-tag">note</span>
                     {% endif %}
                     <span class="chatlog__timestamp">{{ group.created_at }}</span>
                     {% for message in group.messages %}
                         {% if message.content %}
                             <div class="chatlog__content">
                                 {{ message.content }}
+                                {% if message.edited %}
+                                <span class="chatlog__edited-timestamp">(edited)</span>
+                                {% endif %}
                             </div>
+
                         {% endif %}
                         {% for attachment in message.attachments %}
                             <div class="chatlog__attachment">
-                                <a href="{{ attachment }}">
-                                    <img class="chatlog__attachment-thumbnail"
-                                         src="{{ attachment }}" alt="attachment">
+                                <a href="{{ attachment.url }}">
+                                    {% if attachment.is_image %}
+                                    <img class="chatlog__attachment-thumbnail" src="{{ attachment.url }}" alt="attachment"/>
+                                    {% else %}
+                                    Attachment: {{ attachment.filename }}
+                                    {% endif %}
                                 </a>
                             </div>
                         {% endfor %}
@@ -91,7 +97,7 @@
             </div>
         {% endfor %}
         {% if not log_entry.open %}
-            <div class="chatlog__message-group">
+            <div class="chatlog__message-group close">
                 <div class="chatlog__author-avatar-container">
                     <img class="chatlog__author-avatar"
                          src="{{ log_entry.system_avatar_url }}" alt="avatar">
@@ -114,11 +120,35 @@
         {% endif %}
     </div>
     <script>
+
+        let messages = document.getElementsByClassName('internal')
+        for (let m of messages) {
+            m.style.display = "none";
+        }
+
         $(document).ready(function() {
-            $('.pre, .pre--multiline').each(function(i, block) {
+            $('.pre--multiline').each(function(i, block) {
                 hljs.highlightBlock(block);
             });
         });
+
+        function toggleInternalMessages() {
+            let button = document.getElementById('toggle')
+            if (button.innerHTML === 'Show Internal Messages') {
+                button.innerHTML = 'Hide Internal Messages'
+            } else {
+                button.innerHTML = 'Show Internal Messages'
+            }
+            
+            let messages = document.getElementsByClassName('internal')
+            for (let m of messages) {
+                if (m.style.display === "none") {
+                    m.style.display = "flex";
+                } else {
+                    m.style.display = "none";
+                }
+            }
+        }
     </script>
 </body>
 </html>
