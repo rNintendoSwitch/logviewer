@@ -33,6 +33,7 @@ async def init(app, loop):
     app.db = AsyncIOMotorClient(os.getenv('MONGO_URI')).modmail_bot
 
 
+
 @app.get('/')
 async def index(request):
     return response.text('Welcome! This simple website is '
@@ -67,8 +68,7 @@ async def get_logs_file(request, key):
 
 @app.get('/favicon.ico')
 async def get_favicon(request):
-    return response.redirect('/static/favicon.ico')
-
+    return await response.file('/static/favicon.ico')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=os.getenv('PORT', 8000))
+    app.run(host=os.getenv('HOST', '0.0.0.0'), port=os.getenv('PORT', 8000))

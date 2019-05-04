@@ -13,7 +13,7 @@
 
 ## What is this?
 
-In order for you to view your selfhosted logs, you have to deploy this application. Take the url of this app after you deploy it and input it as a config var `LOG_URL` in the modmail bot app.
+In order for you to view your selfhosted logs, you have to deploy this application. Before you deploy the application, create a config var named `MONGO_URI` and put your MongoDB connection URI from the previous section into the value slot. Take the url of this app after you deploy it and input it as a config var `LOG_URL` in the modmail bot app.
 
 ## Contributing
 
