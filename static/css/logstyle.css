@@ -222,10 +222,11 @@ body {
 
 .chatlog__message-group {
     display: flex;
-    margin: 0 10px;
+    margin: 0px;
     padding: 15px 0;
     border-bottom: 1px solid;
-    padding-left: 10px
+    padding-left: 20px;
+    padding-right: 20px;
 }
 
 .chatlog__message-group.internal {
@@ -470,7 +471,7 @@ a {
     display: inline-block;
 }
 
-/* The switch - the box around the slider */
+/* The switch - the box around the lever */
 .switch {
     position: relative;
     display: inline-block;
@@ -485,8 +486,8 @@ a {
     height: 0;
   }
   
-  /* The slider */
-  .slider {
+  /* The lever */
+  .lever {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -498,7 +499,7 @@ a {
     transition: .4s;
   }
   
-  .slider:before {
+  .lever:before {
     position: absolute;
     content: "";
     height: 13.6px;
@@ -513,26 +514,26 @@ a {
 
   * { -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
   
-  input:checked + .slider {
+  input:checked + .lever {
     background-color: #7289da;
   }
   
-  input:focus + .slider {
+  input:focus + .lever {
     box-shadow: 0 0 1px #7289da;
   }
   
-  input:checked + .slider:before {
+  input:checked + .lever:before {
     -webkit-transform: translateX(16px);
     -ms-transform: translateX(16px);
     transform: translateX(16px);
   }
   
-  /* Rounded sliders */
-  .slider.round {
+  /* Rounded levers */
+  .lever.round {
     border-radius: 34px;
   }
   
-  .slider.round:before {
+  .lever.round:before {
     border-radius: 50%;
   }
 

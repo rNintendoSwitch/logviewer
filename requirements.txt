@@ -1,6 +1,0 @@
-python-dateutil
-motor
-sanic
-dnspython
-natural
-jinja2

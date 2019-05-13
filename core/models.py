@@ -4,7 +4,7 @@ import dateutil.parser
 from sanic import response
 from natural.date import duration
 
-from formatter import format_content_html
+from core.formatter import format_content_html
 
 
 class LogEntry:
