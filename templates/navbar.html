@@ -38,13 +38,19 @@
 
 <ul id="nav-mobile" class="sidenav"> 
     {% if not session.logged_in %}
+    <div class="user-view">
+            <div class="background" style='background-color:#2D2F33'>
+            </div>
+            <a><img class="circle" src="https://cdn.discordapp.com/embed/avatars/0.png"></a>
+            <br>
+    </div> 
     <li><a href="/login" class="waves-effect"><span class="grey-text">Login</span></a></li>
     {% else %}
     <div class="user-view">
         <div class="background" style='background-color:#2D2F33'>
         </div>
         <a><img class="circle" src="{{ user.avatar_url }}"></a>
-        <a><span class="grey-text name">{{ user.name }}</span></a>
+        <a><span class="grey-text name"><b style='color:white'>{{ user.name}}</b>#{{ user.discriminator }}</span></a>
         <br>
     </div> 
     <li><a href="/logout" class="waves-effect"><span class="grey-text">Logout</span></a></li>

@@ -85,7 +85,7 @@ def authrequired():
             app = request.app
 
             if not app.using_oauth:
-                return await func(request, *args, **kwargs)
+                return await func(request, await app.db.logs.find_one({'key': key}))
             elif not request['session'].get('logged_in'):
                 request['session']['from'] = request.url
                 return response.redirect('/login')

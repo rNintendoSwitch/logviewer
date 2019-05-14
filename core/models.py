@@ -13,6 +13,8 @@ class LogEntry:
         self.key = data['key']
         self.open = data['open']
         self.created_at = dateutil.parser.parse(data['created_at'])
+        self.human_created_at = duration(self.created_at,
+                                         now=datetime.utcnow())
         self.closed_at = dateutil.parser.parse(data['closed_at']) \
             if not self.open else None
         self.channel_id = int(data['channel_id'])
