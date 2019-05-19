@@ -52,11 +52,19 @@ nav {
   /* z-index: 0; */
 }
 
+
+
 #dashbots {
   font-family: 'Bowlby One SC', cursive;
   color: #7289DA;
   user-select: none;
 }
+
+@media (max-width:435px) {
+    #dashbots {
+      font-size: 13vw;
+    }
+  }
 
 .nav-icon {
   vertical-align: middle; 
