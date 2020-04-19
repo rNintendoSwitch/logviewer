@@ -28,10 +28,10 @@
 <body>
 
         {% block navbar %}
-		
-		{% include 'navbar.html' %}
+        
+        {% include 'navbar.html' %}
 
-		{% endblock %}
+        {% endblock %}
     
     
 <div class='entry'>
@@ -194,7 +194,7 @@
                 window.scroll({
                     top: y,
                     behavior: 'smooth'
-                    });
+                });
         }
 
         let initial_group = highlightMessage()
@@ -213,12 +213,12 @@
 
         function toggleInternalMessages(visible) {
             let messages = document.getElementsByClassName('internal')
-			let toggle = document.getElementById('internal_toggle')
-			
+            let toggle = document.getElementById('internal_toggle')
+            
             // Set toggle to checkbox state unless we are forcing a state.
-			if(visible == undefined) visible = toggle.checked
-			else toggle.checked = visible
-		
+            if(visible == undefined) visible = toggle.checked
+            else toggle.checked = visible
+        
             for (let m of messages) {
                 if (visible) m.style.display = "flex";
                 else m.style.display = "none";
@@ -229,8 +229,8 @@
         toggleInternalMessages()
     </script>
         
-		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/core-js/2.4.1/core.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
         <script>
         M.AutoInit();
