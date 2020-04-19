@@ -197,20 +197,10 @@
                     });
         }
 
-
-        let messages = document.getElementsByClassName('internal')
-
-        for (let m of messages) {
-            m.style.display = "none";
-        }
-
-
         let initial_group = highlightMessage()
         if (initial_group) {
-
             if (initial_group.classList.contains('internal')) {
-                toggle = document.getElementById('internal_toggle')
-                toggle.click()
+                toggleInternalMessages(true)
             }
             scrollToElement(initial_group)
         }
@@ -221,17 +211,22 @@
             });
         });
 
-        function toggleInternalMessages() {   
+        function toggleInternalMessages(visible) {
             let messages = document.getElementsByClassName('internal')
+			let toggle = document.getElementById('internal_toggle')
+			
+            // Set toggle to checkbox state unless we are forcing a state.
+			if(visible == undefined) visible = toggle.checked
+			else toggle.checked = visible
+		
             for (let m of messages) {
-                if (m.style.display === "none") {
-                    m.style.display = "flex";
-                } else {
-                    m.style.display = "none";
-                }
+                if (visible) m.style.display = "flex";
+                else m.style.display = "none";
             }
         }
 
+        // Browser reload will keep the checkbox checked, so ensure our state is valid.
+        toggleInternalMessages()
     </script>
         
 		<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
