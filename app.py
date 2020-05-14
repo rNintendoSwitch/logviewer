@@ -13,9 +13,9 @@ import aiohttp
 from core.models import LogEntry
 from core.utils import get_stack_variable, authrequired, User
 
-OAUTH2_CLIENT_ID = os.getenv("OAUTH2_CLIENT_ID")
-OAUTH2_CLIENT_SECRET = os.getenv("OAUTH2_CLIENT_SECRET")
-OAUTH2_REDIRECT_URI = os.getenv("OAUTH2_REDIRECT_URI")
+OAUTH2_CLIENT_ID = config.OAUTH2_CLIENT_ID
+OAUTH2_CLIENT_SECRET = config.OAUTH2_CLIENT_SECRET
+OAUTH2_REDIRECT_URI = config.OAUTH2_REDIRECT_URI
 
 API_BASE = "https://discordapp.com/api/"
 AUTHORIZATION_BASE_URL = API_BASE + "/oauth2/authorize"
@@ -52,13 +52,12 @@ app.render_template = render_template
 
 @app.listener("before_server_start")
 async def init(app, loop):
-    app.db = AsyncIOMotorClient(os.getenv("MONGO_URI")).modmail_bot
+    app.db = AsyncIOMotorClient(CONFIG.MONGO_URI).modmail
     app.session = aiohttp.ClientSession(loop=loop)
     if app.using_oauth:
-        app.guild_id = os.getenv("GUILD_ID")
-        app.bot_token = os.getenv("TOKEN")
+        app.guild_id = config.GUILD_ID
+        app.bot_token = config.BOT_TOKEN
         app.netloc = urlparse(OAUTH2_REDIRECT_URI).netloc
-        print("USING OAUTH2 MODE")
 
 
 async def fetch_token(code):
