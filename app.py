@@ -9,6 +9,7 @@ from sanic_session import Session, InMemorySessionInterface
 from jinja2 import Environment, PackageLoader
 
 import aiohttp
+import config
 
 from core.models import LogEntry
 from core.utils import get_stack_variable, authrequired, User
@@ -52,7 +53,7 @@ app.render_template = render_template
 
 @app.listener("before_server_start")
 async def init(app, loop):
-    app.db = AsyncIOMotorClient(CONFIG.MONGO_URI).modmail
+    app.db = AsyncIOMotorClient(config.MONGO_URI).modmail
     app.session = aiohttp.ClientSession(loop=loop)
     if app.using_oauth:
         app.guild_id = config.GUILD_ID
