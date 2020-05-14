@@ -105,6 +105,11 @@ def authrequired():
 
             whitelist = config.get("oauth_whitelist", [])
             if document:
+                if str(app.bot_id) != document.get("bot_id"):
+                    abort(
+                        401,
+                        message="Your account does not have permission to view this page.",
+                    )
                 whitelist.extend(document.get("oauth_whitelist", []))
 
             if int(user["id"]) in whitelist or "everyone" in whitelist:
