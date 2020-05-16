@@ -34,14 +34,14 @@ def format_content_html(content: str, allow_links: bool = False) -> str:
 
     def encode_url(m):
         encoded = base64.b64encode(m.group(1).encode()).decode()
-        return "\x1AU" + encoded + "\x1AU"
+        return "\x1AU" + encoded + "\x1AU" + m.group(2) if m.group(2) else ""
 
     # Encode URLs
     content = re.sub(
         r"(\b(?:(?:https?|ftp|file)://|www\.|ftp\.)(?:\([-a-zA-Z0"
         r"-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-zA-Z0-9+&@#/%?=~_|!:,\."
         r"\[\];])*(?:\([-a-zA-Z0-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-z"
-        r"A-Z0-9+&@#/%=~_|$]))",
+        r"A-Z0-9+&@#/%=~_|$]))(&gt;)",
         encode_url,
         content,
     )
