@@ -13,8 +13,10 @@ sanic-session = "==0.5.1"
 "Jinja2" = "==2.10.1"
 aiohttp = "==3.5.4"
 discord-py = "==1.1.1"
+ujson = "==1.35"
 
 [dev-packages]
+pylint = "*"
 
 [requires]
 python_version = "3.8"
