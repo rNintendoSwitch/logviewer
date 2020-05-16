@@ -41,7 +41,7 @@ def format_content_html(content: str, allow_links: bool = False) -> str:
         r"(\b(?:(?:https?|ftp|file)://|www\.|ftp\.)(?:\([-a-zA-Z0"
         r"-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-zA-Z0-9+&@#/%?=~_|!:,\."
         r"\[\];])*(?:\([-a-zA-Z0-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-z"
-        r"A-Z0-9+&@#/%=~_|$]))(&gt;)",
+        r"A-Z0-9+&@#/%=~_|$]))(&gt;)?",
         encode_url,
         content,
     )
