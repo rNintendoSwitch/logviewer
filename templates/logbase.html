@@ -102,13 +102,17 @@
                 <div class="chatlog__messages">
                     <span class="chatlog__author-name" title="{{ group.author | string | e }}">{{ group.author.name | e }}</span>
                     {% if group.type == 'thread_message' %}
-                    {% if group.author.mod %}
-                        <span class="mod-tag">Reply</span>
-                    {% endif %}
+                        {% if group.author.mod %}
+                            <span class="mod-tag">Reply</span>
+                        {% endif %}
                     {% elif group.type == 'anonymous' %}
-                    <span class='mod-tag'>Anon</span>
+                        <span class='mod-tag'>Anon</span>
                     {% elif group.type == 'internal' %}
-                    <span class='internal-tag'>Internal</span>
+                        <span class='internal-tag'>Internal</span>
+                    {% elif group.type == 'edit_before' %}
+                        <span class='generic-tag'>Before</span>
+                    {% elif group.type == 'edit_after' %}
+                        <span class='generic-tag'>After</span>
                     {% else %}
                         <span>took a note</span><span class="system-tag">note</span>
                     {% endif %}
