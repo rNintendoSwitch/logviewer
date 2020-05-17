@@ -113,6 +113,8 @@
                         <span class='generic-tag'>Before</span>
                     {% elif group.type == 'edit_after' %}
                         <span class='generic-tag'>After</span>
+                    {% elif group.type == 'mention' %}
+                        <span class='system-tag'>Mention</span>
                     {% endif %}
                     <span class="chatlog__timestamp">{{ group.created_at }}
                         {% if group.channel.id %}
