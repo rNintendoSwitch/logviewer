@@ -33,18 +33,23 @@ def format_content_html(content: str, allow_links: bool = False) -> str:
         content = re.sub(r"\[(.*?)\]\((.*?)\)", encode_link, content)
 
     def encode_url(m):
-        encoded = base64.b64encode(m.group(1).encode()).decode()
-        return "\x1AU" + encoded + "\x1AU" + m.group(2) if m.group(2) else ""
+        match = m.group(1)
+        if match.endswith("&gt;"): # if the url end with &gt;, don't encode that part
+            return f"\x1AU{base64.b64encode(match[:-4].encode()).decode()}\x1AU&gt;"
+        else:
+            return f"\x1AU{base64.b64encode(match.encode()).decode()}\x1AU"
 
     # Encode URLs
+    print(f'PRE {content}')
     content = re.sub(
         r"(\b(?:(?:https?|ftp|file)://|www\.|ftp\.)(?:\([-a-zA-Z0"
         r"-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-zA-Z0-9+&@#/%?=~_|!:,\."
         r"\[\];])*(?:\([-a-zA-Z0-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-z"
-        r"A-Z0-9+&@#/%=~_|$]))(&gt;)?",
+        r"A-Z0-9+&@#/%=~_|$;]))",
         encode_url,
         content,
     )
+    print(f'POST {content}')
 
     # Process bold (**text**)
     content = re.sub(r"(\*\*)(?=\S)(.+?[*_]*)(?<=\S)\1", r"<b>\2</b>", content)
