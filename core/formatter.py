@@ -40,7 +40,6 @@ def format_content_html(content: str, allow_links: bool = False) -> str:
             return f"\x1AU{base64.b64encode(match.encode()).decode()}\x1AU"
 
     # Encode URLs
-    print(f'PRE {content}')
     content = re.sub(
         r"(\b(?:(?:https?|ftp|file)://|www\.|ftp\.)(?:\([-a-zA-Z0"
         r"-9+&@#/%?=~_|!:,\.\[\];]*\)|[-a-zA-Z0-9+&@#/%?=~_|!:,\."
@@ -49,7 +48,6 @@ def format_content_html(content: str, allow_links: bool = False) -> str:
         encode_url,
         content,
     )
-    print(f'POST {content}')
 
     # Process bold (**text**)
     content = re.sub(r"(\*\*)(?=\S)(.+?[*_]*)(?<=\S)\1", r"<b>\2</b>", content)

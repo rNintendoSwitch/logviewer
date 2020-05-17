@@ -6,8 +6,13 @@
     <meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width"/>
 
-    <meta content="{{ log_entry.thread_messages | length }} messages {% if log_entry.open %}(Open){% else %}(Closed){% endif %}" property="og:site_name">
-    <meta content="Recipient: {{ log_entry.recipient | string | e }}" property="og:title">
+    {% if log_entry.recipient.id %}
+        <meta content="{{ log_entry.thread_messages | length }} messages {% if log_entry.open  %}(Open){% else %}(Closed){% endif %}" property="og:site_name">
+        <meta content="Recipient: {{ log_entry.recipient | string | e }}" property="og:title">
+    {% else %}
+    <meta content="{{ log_entry.thread_messages | length }} messages (Archive)" property="og:site_name">
+    <meta content="{{ log_entry.recipient.name | string | e }}" property="og:title">
+    {% endif %}
     <meta content='{{ log_entry.recipient.avatar_url }}' property='og:image'>
     <meta content='Created {{ log_entry.human_created_at }}' property='og:image'>
 
@@ -45,18 +50,27 @@
                  alt="avatar">
         </div>
         <div class="info__metadata">
-            <div class="info__guild-name"><span style='color:white'>Thread Logs</span> {% if log_entry.open %}
-                (Open){% else %}(Closed){% endif %}</div>
-            <div title="{{ log_entry.recipient.id }}" class="info__channel-topic tooltip"><span style="color:white">Recipient:
-                <b>{{ log_entry.recipient.name | e }}</b></span>#{{ log_entry.recipient.discriminator }}
-                <span class='tooltiptext pre pre--inline'>{{ log_entry.recipient.id }}</span>
-            </div>
-            {% if log_entry.recipient != log_entry.creator %}
-            <br>
-                <div class="info__channel-topic tooltip"><span style="color:white">Creator:
-                    <b>{{ log_entry.creator.name | e }}</span></b>#{{ log_entry.creator.discriminator }}
-                    <span class='tooltiptext pre pre--inline'>{{ log_entry.creator.id }}</span>
+            {% if log_entry.recipient.id %} 
+                <div class="info__guild-name"><span style='color:white'>Thread Logs</span> {% if log_entry.open %}
+                    (Open){% else %}(Closed){% endif %}</div>
+                <div title="{{ log_entry.recipient.id }}" class="info__channel-topic tooltip"><span style="color:white">Recipient:
+                    <b>{{ log_entry.recipient.name | e }}</b></span>#{{ log_entry.recipient.discriminator }}
+                    <span class='tooltiptext pre pre--inline'>{{ log_entry.recipient.id }}</span>
                 </div>
+                {% if log_entry.recipient != log_entry.creator %}
+                <br>
+                    <div class="info__channel-topic tooltip"><span style="color:white">Creator:
+                        <b>{{ log_entry.creator.name | e }}</span></b>#{{ log_entry.creator.discriminator }}
+                        <span class='tooltiptext pre pre--inline'>{{ log_entry.creator.id }}</span>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="info__guild-name"><span style='color:white'>Archive</span></div>
+                {% if log_entry.recipient.name  %}
+                    <div class="info__channel-topic">
+                        <span style="color:white"><b>{{ log_entry.recipient.name | e }}</b></span>
+                    </div>
+                {% endif %}
             {% endif %}
 
             <div class="info__channel-message-count">{{ log_entry.thread_messages | length }}
@@ -124,7 +138,7 @@
                 </div>
             </div>
         {% endfor %}
-        {% if not log_entry.open %}
+        {% if not log_entry.open and log_entry.recipient.id %}
             <div class="chatlog__message-group close">
                 <div class="chatlog__author-avatar-container">
                     <img class="chatlog__author-avatar"
