@@ -113,10 +113,12 @@
                         <span class='generic-tag'>Before</span>
                     {% elif group.type == 'edit_after' %}
                         <span class='generic-tag'>After</span>
-                    {% else %}
-                        <span>took a note</span><span class="system-tag">note</span>
                     {% endif %}
-                    <span class="chatlog__timestamp">{{ group.created_at }}</span>
+                    <span class="chatlog__timestamp">{{ group.created_at }}
+                        {% if group.channel.id %}
+                            in <span class="mention">#{{ group.channel.name }}</span>
+                        {% endif %}
+                    </span>
                     {% for message in group.messages %}
                         {% if message.content %}
                             <div class="chatlog__content" id="{{ message.id }}">

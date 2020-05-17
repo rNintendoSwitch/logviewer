@@ -150,6 +150,10 @@ class MessageGroup:
     def type(self):
         return self.messages[0].type
 
+    @property
+    def channel(self):
+        return self.messages[0].channel
+
 
 class Attachment:
     def __init__(self, data):
@@ -178,12 +182,14 @@ class Message:
         self.author = User(data["author"])
         self.type = data.get("type", "thread_message")
         self.edited = data.get("edited", False)
+        self.channel = data.get("channel") if "channel" in data else {"id": 0, "name": None}
 
     def is_different_from(self, other):
         return (
             (other.created_at - self.created_at).total_seconds() > 60
             or other.author != self.author
             or other.type != self.type
+            or other.channel != self.channel
         )
 
     @staticmethod
