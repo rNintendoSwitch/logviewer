@@ -221,7 +221,7 @@
 
         let initial_group = highlightMessage()
         if (initial_group) {
-            if (initial_group.classList.contains('internal')) {
+            if (initial_group.classList.contains('type-internal')) {
                 toggleInternalMessages(true)
             }
             scrollToElement(initial_group)
@@ -234,7 +234,7 @@
         });
 
         function toggleInternalMessages(visible) {
-            let messages = document.getElementsByClassName('internal')
+            let messages = document.getElementsByClassName('type-internal')
             let toggle = document.getElementById('internal_toggle')
             
             // Set toggle to checkbox state unless we are forcing a state.
