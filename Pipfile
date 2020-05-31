@@ -19,4 +19,4 @@ ujson = "==1.35"
 pylint = "*"
 
 [requires]
-python_version = "3.8"
+# We want to target 3.7+ -- works with both.
