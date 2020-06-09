@@ -105,7 +105,9 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
 *.json
 !app.json
 .DS_Store
 .idea/
+.vscode
