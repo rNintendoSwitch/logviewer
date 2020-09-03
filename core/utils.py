@@ -6,6 +6,7 @@ import datetime
 from discord.enums import DefaultAvatar
 from discord.utils import snowflake_time
 import asyncio
+import json
 
 
 class User:
@@ -17,6 +18,16 @@ class User:
         self.mfa_enabled = data.get("mfa_enabled", False)
         self.premium_type = data.get("premium_type")
         self.bot = False
+
+    def toDict(self):
+        d = self.__dict__
+        d['username'] = self.name
+        d['avatar_url'] = self.avatar_url
+        d['default_avatar'] = self.default_avatar_url
+        d['default_avatar_url'] = self.default_avatar_url
+        d['mention'] = self.mention
+        d['created_at'] = self.created_at.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+        return d
 
     def __str__(self):
         return "{0.name}#{0.discriminator}".format(self)
@@ -68,7 +79,6 @@ class User:
         This is when the user's discord account was created."""
         return snowflake_time(self.id)
 
-
 def get_stack_variable(name):
     stack = inspect.stack()
     try:
@@ -92,11 +102,11 @@ def authrequired():
 
             if not app.using_oauth:
                 return await func(request, await app.db.logs.find_one({"key": key}))
-            elif not request["session"].get("logged_in"):
-                request["session"]["from"] = request.url
+            elif not request.ctx.session["session"].get("logged_in"):
+                request.ctx.session["session"]["from"] = request.url
                 return response.redirect("/login")
 
-            user = request["session"]["user"]
+            user = User(request.ctx.session["session"]["user"])
 
             config, document = await asyncio.gather(
                 app.db.config.find_one({"bot_id": int(app.bot_id)}),
@@ -107,10 +117,10 @@ def authrequired():
             if document:
                 whitelist.extend(document.get("oauth_whitelist", []))
 
-            if int(user["id"]) in whitelist or "everyone" in whitelist:
+            if int(user.id) in whitelist or "everyone" in whitelist:
                 return await func(request, document)
 
-            roles = await app.get_user_roles(user["id"])
+            roles = await app.get_user_roles(user.id)
 
             if any(int(r) in whitelist for r in roles):
                 return await func(request, document)
