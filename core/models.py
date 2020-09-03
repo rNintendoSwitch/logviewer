@@ -12,6 +12,7 @@ class LogEntry:
         self.app = app
         self.key = data["key"]
         self.open = data["open"]
+        self.ban_appeal = None if not "ban_appeal" in data else data["ban_appeal"]
         self.created_at = dateutil.parser.parse(data["created_at"])
         self.human_created_at = duration(self.created_at, now=datetime.utcnow())
         self.closed_at = (
@@ -70,12 +71,10 @@ class LogEntry:
         if self.recipient.id:
             out = f"Thread created at {thread_create_time}\n"
             if self.creator == self.recipient:
-                out += f"[R] {self.creator} "
-                out += f"({self.creator.id}) created a Modmail thread. \n"
+                out += f"[R] {self.creator} ({self.creator.id}) created a "
+                out += f"{'Modmail' if not self.ban_appeal else 'Ban Appeal'} thread. \n"
             else:
-                out += f"[M] {self.creator} "
-                out += f"created a thread with [R] "
-                out += f"{self.recipient} ({self.recipient.id})\n"
+                out += f"[M] {self.creator} created a thread with [R] {self.recipient} ({self.recipient.id})\n"
         else:
             out = f"Archive created at {thread_create_time}\n"
             out += f"> {self.recipient.name}\n"
@@ -107,8 +106,7 @@ class LogEntry:
             if messages:  # only add if at least 1 message was sent
                 out += "────────────────────────────────────────────────\n"
 
-            out += f"[M] {self.closer} ({self.closer.id}) "
-            out += "closed the Modmail thread. \n"
+            out += f"[M] {self.closer} ({self.closer.id}) closed the thread. \n"
 
             closed_time = self.closed_at.strftime("%d %b %Y - %H:%M UTC")
             out += f"Thread closed at {closed_time} \n"
