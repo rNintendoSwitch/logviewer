@@ -41,9 +41,10 @@ def render_template(name, *args, **kwargs):
     template = jinja_env.get_template(name + ".html")
     request = get_stack_variable("request")
     if request:
+        if not 'session' in request.ctx.session: request.ctx.session["session"] = {} 
         kwargs["request"] = request
-        kwargs["session"] = request["session"]
-        kwargs["user"] = request["session"].get("user")
+        kwargs["session"] = request.ctx.session["session"]
+        kwargs["user"] = request.ctx.session["session"].get("user")
     kwargs.update(globals())
     return response.html(template.render(*args, **kwargs))
 
@@ -60,6 +61,9 @@ async def init(app, loop):
         app.bot_token = config.BOT_TOKEN
         app.netloc = urlparse(OAUTH2_REDIRECT_URI).netloc
 
+@app.middleware('request')
+async def ensure_session_ctx(request):
+    if not 'session' in request.ctx.session: request.ctx.session["session"] = {} 
 
 async def fetch_token(code):
     data = {
@@ -114,11 +118,11 @@ async def index(request):
 
 @app.get("/login")
 async def login(request):
-    if not request["session"].get("from"):
+    if not request.ctx.session["session"].get("from"):
         referer = request.headers.get("referer", "/")
         if referer != "/" and urlparse(referer).netloc != app.netloc:
             referer = "/"  # dont redirect to a different site
-        request["session"]["from"] = referer
+        request.ctx.session["session"]["from"] = referer
 
     data = {
         "scope": "identify",
@@ -139,20 +143,20 @@ async def oauth_callback(request):
     token = await fetch_token(code)
     access_token = token.get("access_token")
     if access_token is not None:
-        request["session"]["access_token"] = access_token
-        request["session"]["logged_in"] = True
-        request["session"]["user"] = User(await get_user_info(access_token))
+        request.ctx.session["session"]["access_token"] = access_token
+        request.ctx.session["session"]["logged_in"] = True
+        request.ctx.session["session"]["user"] = User(await get_user_info(access_token))
         url = "/"
-        if "from" in request["session"]:
-            url = request["session"]["from"]
-            del request["session"]["from"]
+        if "from" in request.ctx.session["session"]:
+            url = request.ctx.session["session"]["from"]
+            del request.ctx.session["session"]["from"]
         return response.redirect(url)
     return response.redirect("/login")
 
 
 @app.get("/logout")
 async def logout(request):
-    request["session"].clear()
+    request.ctx.session["session"].clear()
     return response.redirect("/")
 
 
