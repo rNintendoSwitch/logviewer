@@ -1,2 +1,2 @@
 # logviewer
-Fork of [kyb3r/logviewer](https://github.com/kyb3r/logviewer) for use with /r/NintendoSwitch's Discord [MechaBowser](https://github.com/MattBSG/MechaBowser) and [Parakarry](https://github.com/MattBSG/Parakarry) bots.
+Fork of [kyb3r/logviewer](https://github.com/kyb3r/logviewer) for use with [/r/NintendoSwitch's](https://github.com/rNintendoSwitch/) Discord bots.
