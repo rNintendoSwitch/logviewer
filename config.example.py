@@ -1,3 +1,5 @@
+# type: ignore
+
 OAUTH2_CLIENT_ID = 'int as str'
 OAUTH2_CLIENT_SECRET = ''
 OAUTH2_REDIRECT_URI = 'http://example.com/callback'
