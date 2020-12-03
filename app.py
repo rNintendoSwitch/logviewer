@@ -28,7 +28,7 @@ if prefix == "NONE":
     prefix = ""
 
 app = Sanic(__name__)
-app.using_oauth = OAUTH2_CLIENT_ID and OAUTH2_CLIENT_SECRET
+app.using_oauth = len(config.OAUTH2_WHITELIST) != 0
 app.bot_id = OAUTH2_CLIENT_ID
 
 Session(app, interface=InMemorySessionInterface())
@@ -94,6 +94,8 @@ async def get_user_info(token):
 
 
 async def get_user_roles(user_id):
+    if not app.guild_id and app.bot_token: return []
+
     url = ROLE_URL.format(guild_id=app.guild_id, user_id=user_id)
     headers = {"Authorization": f"Bot {app.bot_token}"}
     async with app.session.get(url, headers=headers) as resp:
