@@ -59,7 +59,6 @@ async def init(app, loop):
     else:
         mongo_uri = f"mongodb://{config.MONGO_HOST}"
     
-    print(mongo_uri)
     app.db = AsyncIOMotorClient(mongo_uri).modmail
     app.session = aiohttp.ClientSession(loop=loop)
     if app.using_oauth:
