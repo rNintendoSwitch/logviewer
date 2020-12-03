@@ -1,6 +1,6 @@
 import os
 from functools import wraps
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, quote_plus
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from sanic import Sanic, response
@@ -54,7 +54,13 @@ app.render_template = render_template
 
 @app.listener("before_server_start")
 async def init(app, loop):
-    app.db = AsyncIOMotorClient(config.MONGO_URI).modmail
+    if config.MONGO_USER and config.MONGO_PASS:
+        mongo_uri = f"mongodb://{quote_plus(config.MONGO_USER)}:{quote_plus(config.MONGO_PASS)}@{config.MONGO_HOST}"
+    else:
+        mongo_uri = f"mongodb://{config.MONGO_HOST}"
+    
+    print(mongo_uri)
+    app.db = AsyncIOMotorClient(mongo_uri).modmail
     app.session = aiohttp.ClientSession(loop=loop)
     if app.using_oauth:
         app.guild_id = config.GUILD_ID
