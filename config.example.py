@@ -1,8 +1,8 @@
 # type: ignore
 
-MONGO_USER = ''
-MONGO_PASS = ''
-MONGO_HOST = '127.0.0.1'
+mongoUser = ''
+mongoPass = ''
+mongoHost = ''
 
 # Can contain User IDs and Role IDs. Leave empty to disable OAuth.
 OAUTH2_WHITELIST = [] 
