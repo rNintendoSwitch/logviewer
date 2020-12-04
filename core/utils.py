@@ -6,7 +6,8 @@ import datetime
 from discord.enums import DefaultAvatar
 from discord.utils import snowflake_time
 import asyncio
-import json
+
+import config
 
 
 class User:
@@ -99,25 +100,18 @@ def authrequired():
         @wraps(func)
         async def wrapper(request, key):
             app = request.app
+            document = await app.db.logs.find_one({"key": key})
 
             if not app.using_oauth:
-                return await func(request, await app.db.logs.find_one({"key": key}))
+                return await func(request, document)
             elif not request.ctx.session["session"].get("logged_in"):
                 request.ctx.session["session"]["from"] = request.url
                 return response.redirect("/login")
 
             user = User(request.ctx.session["session"]["user"])
+            whitelist = config.OAUTH2_WHITELIST
 
-            config, document = await asyncio.gather(
-                app.db.config.find_one({"bot_id": int(app.bot_id)}),
-                app.db.logs.find_one({"key": key}),
-            )
-
-            whitelist = config.get("oauth_whitelist", [])
-            if document:
-                whitelist.extend(document.get("oauth_whitelist", []))
-
-            if int(user.id) in whitelist or "everyone" in whitelist:
+            if int(user.id) in whitelist:
                 return await func(request, document)
 
             roles = await app.get_user_roles(user.id)

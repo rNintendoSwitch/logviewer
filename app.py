@@ -1,6 +1,6 @@
 import os
 from functools import wraps
-from urllib.parse import urlencode, urlparse
+from urllib.parse import urlencode, urlparse, quote_plus
 
 from motor.motor_asyncio import AsyncIOMotorClient
 from sanic import Sanic, response
@@ -28,7 +28,7 @@ if prefix == "NONE":
     prefix = ""
 
 app = Sanic(__name__)
-app.using_oauth = OAUTH2_CLIENT_ID and OAUTH2_CLIENT_SECRET
+app.using_oauth = len(config.OAUTH2_WHITELIST) != 0
 app.bot_id = OAUTH2_CLIENT_ID
 
 Session(app, interface=InMemorySessionInterface())
@@ -54,7 +54,12 @@ app.render_template = render_template
 
 @app.listener("before_server_start")
 async def init(app, loop):
-    app.db = AsyncIOMotorClient(config.MONGO_URI).modmail
+    if config.mongoUser and config.mongoPass:
+        mongo_uri = f"mongodb://{quote_plus(config.mongoUser)}:{quote_plus(config.mongoPass)}@{config.mongoHost}"
+    else:
+        mongo_uri = f"mongodb://{config.mongoHost}"
+    
+    app.db = AsyncIOMotorClient(mongo_uri).modmail
     app.session = aiohttp.ClientSession(loop=loop)
     if app.using_oauth:
         app.guild_id = config.GUILD_ID
@@ -89,6 +94,8 @@ async def get_user_info(token):
 
 
 async def get_user_roles(user_id):
+    if not app.guild_id and app.bot_token: return []
+
     url = ROLE_URL.format(guild_id=app.guild_id, user_id=user_id)
     headers = {"Authorization": f"Bot {app.bot_token}"}
     async with app.session.get(url, headers=headers) as resp:
@@ -188,6 +195,7 @@ async def get_logs_file(request, document):
 
 if __name__ == "__main__":
     app.run(
+        # You can change these using environment variables
         host=os.getenv("HOST", "127.0.0.1"),
         port=os.getenv("PORT", 8880),
         debug=bool(os.getenv("DEBUG", False)),
