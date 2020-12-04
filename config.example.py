@@ -1,5 +1,3 @@
-# type: ignore
-
 mongoUser = ''
 mongoPass = ''
 mongoHost = ''
