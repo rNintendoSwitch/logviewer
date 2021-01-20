@@ -196,7 +196,7 @@ async def get_logs_file(request, document):
 if __name__ == "__main__":
     app.run(
         # You can change these using environment variables
-        host=os.getenv("HOST", "127.0.0.1"),
+        host=os.getenv("HOST", "0.0.0.0"),
         port=os.getenv("PORT", 8880),
         debug=bool(os.getenv("DEBUG", False)),
     )
