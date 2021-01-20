@@ -1,7 +1,7 @@
 FROM gorialis/discord.py:master
 
 WORKDIR /app
-ADD ./logviewer /app
+ADD . /app
 
 EXPOSE 8880
 
