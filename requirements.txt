@@ -1,10 +1,10 @@
 python-dateutil
 motor
-sanic
-dnspython
+sanic~=19.3
+dnspython>=1.16.0
 natural
-sanic-session
-Jinja2
+sanic-session==0.5.1
+Jinja2==2.11.2
 aiohttp
 discord-py
 ujson
