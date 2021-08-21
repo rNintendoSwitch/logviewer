@@ -2,7 +2,6 @@ from functools import wraps
 from sanic.exceptions import abort
 from sanic import response
 import inspect
-import datetime
 from discord.enums import DefaultAvatar
 from discord.utils import snowflake_time
 import asyncio
@@ -22,12 +21,12 @@ class User:
 
     def toDict(self):
         d = self.__dict__
-        d['username'] = self.name
-        d['avatar_url'] = self.avatar_url
-        d['default_avatar'] = self.default_avatar_url
-        d['default_avatar_url'] = self.default_avatar_url
-        d['mention'] = self.mention
-        d['created_at'] = self.created_at.strftime('%Y-%m-%dT%H:%M:%S.%f%z')
+        d["username"] = self.name
+        d["avatar_url"] = self.avatar_url
+        d["default_avatar"] = self.default_avatar_url
+        d["default_avatar_url"] = self.default_avatar_url
+        d["mention"] = self.mention
+        d["created_at"] = self.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
         return d
 
     def __str__(self):
@@ -79,6 +78,7 @@ class User:
         """Returns the user's creation time in UTC.
         This is when the user's discord account was created."""
         return snowflake_time(self.id)
+
 
 def get_stack_variable(name):
     stack = inspect.stack()

@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 import dateutil.parser
 
 from sanic import response
@@ -14,7 +14,9 @@ class LogEntry:
         self.open = data["open"]
         self.ban_appeal = None if not "ban_appeal" in data else data["ban_appeal"]
         self.created_at = dateutil.parser.parse(data["created_at"])
-        self.human_created_at = duration(self.created_at, now=datetime.utcnow())
+        self.human_created_at = duration(
+            self.created_at, now=datetime.now(tz=timezone.utc)
+        )
         self.closed_at = (
             dateutil.parser.parse(data["closed_at"]) if not self.open else None
         )
@@ -36,7 +38,7 @@ class LogEntry:
 
     @property
     def human_closed_at(self):
-        return duration(self.closed_at, now=datetime.utcnow())
+        return duration(self.closed_at, now=datetime.now(tz=timezone.utc))
 
     @property
     def message_groups(self):
@@ -66,13 +68,14 @@ class LogEntry:
     def render_plain_text(self):
         messages = self.messages
         thread_create_time = self.created_at.strftime("%d %b %Y - %H:%M UTC")
-        
 
         if self.recipient.id:
             out = f"Thread created at {thread_create_time}\n"
             if self.creator == self.recipient:
                 out += f"[R] {self.creator} ({self.creator.id}) created a "
-                out += f"{'Modmail' if not self.ban_appeal else 'Ban Appeal'} thread. \n"
+                out += (
+                    f"{'Modmail' if not self.ban_appeal else 'Ban Appeal'} thread. \n"
+                )
             else:
                 out += f"[M] {self.creator} created a thread with [R] {self.recipient} ({self.recipient.id})\n"
         else:
@@ -173,14 +176,18 @@ class Message:
     def __init__(self, data):
         self.id = int(data["message_id"])
         self.created_at = dateutil.parser.parse(data["timestamp"])
-        self.human_created_at = duration(self.created_at, now=datetime.utcnow())
+        self.human_created_at = duration(
+            self.created_at, now=datetime.now(tz=timezone.utc)
+        )
         self.raw_content = data["content"]
         self.content = self.format_html_content(self.raw_content)
         self.attachments = [Attachment(a) for a in data["attachments"]]
         self.author = User(data["author"])
         self.type = data.get("type", "thread_message")
         self.edited = data.get("edited", False)
-        self.channel = data.get("channel") if "channel" in data else {"id": 0, "name": None}
+        self.channel = (
+            data.get("channel") if "channel" in data else {"id": 0, "name": None}
+        )
 
     def is_different_from(self, other):
         return (
