@@ -41,7 +41,8 @@ def render_template(name, *args, **kwargs):
     template = jinja_env.get_template(name + ".html")
     request = get_stack_variable("request")
     if request:
-        if not 'session' in request.ctx.session: request.ctx.session["session"] = {} 
+        if not "session" in request.ctx.session:
+            request.ctx.session["session"] = {}
         kwargs["request"] = request
         kwargs["session"] = request.ctx.session["session"]
         kwargs["user"] = request.ctx.session["session"].get("user")
@@ -58,7 +59,7 @@ async def init(app, loop):
         mongo_uri = f"mongodb://{quote_plus(config.mongoUser)}:{quote_plus(config.mongoPass)}@{config.mongoHost}"
     else:
         mongo_uri = f"mongodb://{config.mongoHost}"
-    
+
     app.db = AsyncIOMotorClient(mongo_uri).modmail
     app.session = aiohttp.ClientSession(loop=loop)
     if app.using_oauth:
@@ -66,9 +67,12 @@ async def init(app, loop):
         app.bot_token = config.BOT_TOKEN
         app.netloc = urlparse(OAUTH2_REDIRECT_URI).netloc
 
-@app.middleware('request')
+
+@app.middleware("request")
 async def ensure_session_ctx(request):
-    if not 'session' in request.ctx.session: request.ctx.session["session"] = {} 
+    if not "session" in request.ctx.session:
+        request.ctx.session["session"] = {}
+
 
 async def fetch_token(code):
     data = {
@@ -94,7 +98,8 @@ async def get_user_info(token):
 
 
 async def get_user_roles(user_id):
-    if not app.guild_id and app.bot_token: return []
+    if not app.guild_id and app.bot_token:
+        return []
 
     url = ROLE_URL.format(guild_id=app.guild_id, user_id=user_id)
     headers = {"Authorization": f"Bot {app.bot_token}"}
