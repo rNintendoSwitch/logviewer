@@ -3,7 +3,7 @@ mongoPass = ''
 mongoHost = ''
 
 # Can contain User IDs and Role IDs. Leave empty to disable OAuth.
-OAUTH2_WHITELIST = [] 
+OAUTH2_WHITELIST = []
 
 # Only required if you use OAuth
 OAUTH2_CLIENT_ID = ''

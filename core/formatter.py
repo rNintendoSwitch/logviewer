@@ -34,7 +34,7 @@ def format_content_html(content: str, allow_links: bool = False) -> str:
 
     def encode_url(m):
         match = m.group(1)
-        if match.endswith("&gt;"): # if the url end with &gt;, don't encode that part
+        if match.endswith("&gt;"):  # if the url end with &gt;, don't encode that part
             return f"\x1AU{base64.b64encode(match[:-4].encode()).decode()}\x1AU&gt;"
         else:
             return f"\x1AU{base64.b64encode(match.encode()).decode()}\x1AU"
@@ -111,27 +111,20 @@ def format_content_html(content: str, allow_links: bool = False) -> str:
     content = content.replace("@here", '<span class="mention">@here</span>')
 
     # User mentions (<@id> and <@!id>)
-    content = re.sub(
-        r"(&lt;@!?(\d+)&gt;)", r'<span class="mention" title="\2">\1</span>', content
-    )
+    content = re.sub(r"(&lt;@!?(\d+)&gt;)", r'<span class="mention" title="\2">\1</span>', content)
 
     # Channel mentions (<#id>)
     content = re.sub(r"(&lt;#\d+&gt;)", r'<span class="mention">\1</span>', content)
 
     # Role mentions (<@&id>)
-    content = re.sub(
-        r"(&lt;@&amp;(\d+)&gt;)", r'<span class="mention">\1</span>', content
-    )
+    content = re.sub(r"(&lt;@&amp;(\d+)&gt;)", r'<span class="mention">\1</span>', content)
 
     # Custom emojis (<:name:id>)
     is_jumboable = not re.sub(r"&lt;(:.*?:)(\d*)&gt;", "", content)
     emoji_class = "emoji emoji--large" if is_jumboable else "emoji"
     content = re.sub(
         r"&lt;(:.*?:)(\d*)&gt;",
-        r'<img class="'
-        + emoji_class
-        + r'" title="\1" src="https://cdn.discordapp.com/'
-        + r'emojis/\2.png" alt="\1">',
+        r'<img class="' + emoji_class + r'" title="\1" src="https://cdn.discordapp.com/' + r'emojis/\2.png" alt="\1">',
         content,
     )
 

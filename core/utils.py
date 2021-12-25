@@ -64,9 +64,7 @@ class User:
     @property
     def default_avatar_url(self):
         """Returns a URL for a user's default avatar."""
-        return "https://cdn.discordapp.com/embed/avatars/{}.png".format(
-            self.default_avatar.value
-        )
+        return "https://cdn.discordapp.com/embed/avatars/{}.png".format(self.default_avatar.value)
 
     @property
     def mention(self):
@@ -119,9 +117,7 @@ def authrequired():
             if any(int(r) in whitelist for r in roles):
                 return await func(request, document)
 
-            abort(
-                401, message="Your account does not have permission to view this page."
-            )
+            abort(401, message="Your account does not have permission to view this page.")
 
         return wrapper
 

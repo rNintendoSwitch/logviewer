@@ -118,9 +118,7 @@ async def not_found(request, exc):
 
 @app.exception(Unauthorized)
 async def not_authorized(request, exc):
-    return render_template(
-        "unauthorized", message="You do not have permission to view this page."
-    )
+    return render_template("unauthorized", message="You do not have permission to view this page.")
 
 
 @app.get("/")

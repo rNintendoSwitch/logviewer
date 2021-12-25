@@ -13,17 +13,13 @@ class LogEntry:
         self.key = data["key"]
         self.open = data["open"]
         self.ban_appeal = None if not "ban_appeal" in data else data["ban_appeal"]
-        self.created_at = dateutil.parser.parse(data["created_at"]).replace(
-            tzinfo=timezone.utc
-        )
+        self.created_at = dateutil.parser.parse(data["created_at"]).replace(tzinfo=timezone.utc)
         self.human_created_at = duration(
             self.created_at,
             now=datetime.now(tz=timezone.utc),
         )
         self.closed_at = (
-            dateutil.parser.parse(data["closed_at"]).replace(tzinfo=timezone.utc)
-            if not self.open
-            else None
+            dateutil.parser.parse(data["closed_at"]).replace(tzinfo=timezone.utc) if not self.open else None
         )
         self.channel_id = int(data["channel_id"])
         self.guild_id = int(data["guild_id"])
@@ -33,9 +29,7 @@ class LogEntry:
         self.close_message = format_content_html(data.get("close_message") or "")
         self.messages = [Message(m) for m in data["messages"]]
         self.internal_messages = [m for m in self.messages if m.type == "internal"]
-        self.thread_messages = [
-            m for m in self.messages if m.type not in ("internal", "system")
-        ]
+        self.thread_messages = [m for m in self.messages if m.type not in ("internal", "system")]
 
     @property
     def human_closed_at(self):
@@ -77,9 +71,7 @@ class LogEntry:
             out = f"Thread created at {thread_create_time}\n"
             if self.creator == self.recipient:
                 out += f"[R] {self.creator} ({self.creator.id}) created a "
-                out += (
-                    f"{'Modmail' if not self.ban_appeal else 'Ban Appeal'} thread. \n"
-                )
+                out += f"{'Modmail' if not self.ban_appeal else 'Ban Appeal'} thread. \n"
             else:
                 out += f"[M] {self.creator} created a thread with [R] {self.recipient} ({self.recipient.id})\n"
         else:
@@ -131,9 +123,7 @@ class User:
 
     @property
     def default_avatar_url(self):
-        return "https://cdn.discordapp.com/embed/avatars/{}.png".format(
-            int(self.discriminator) % 5
-        )
+        return "https://cdn.discordapp.com/embed/avatars/{}.png".format(int(self.discriminator) % 5)
 
     def __str__(self):
         return f"{self.name}#{self.discriminator}"
@@ -179,9 +169,7 @@ class Attachment:
 class Message:
     def __init__(self, data):
         self.id = int(data["message_id"])
-        self.created_at = dateutil.parser.parse(data["timestamp"]).replace(
-            tzinfo=timezone.utc
-        )
+        self.created_at = dateutil.parser.parse(data["timestamp"]).replace(tzinfo=timezone.utc)
         self.human_created_at = duration(
             self.created_at,
             now=datetime.now(tz=timezone.utc),
@@ -192,9 +180,7 @@ class Message:
         self.author = User(data["author"])
         self.type = data.get("type", "thread_message")
         self.edited = data.get("edited", False)
-        self.channel = (
-            data.get("channel") if "channel" in data else {"id": 0, "name": None}
-        )
+        self.channel = data.get("channel") if "channel" in data else {"id": 0, "name": None}
 
     def is_different_from(self, other):
         return (
