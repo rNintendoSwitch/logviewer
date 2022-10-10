@@ -8,3 +8,4 @@ Jinja2==2.11.3
 aiohttp
 discord-py==v1.7.3
 ujson
+markupsafe==2.0.1
