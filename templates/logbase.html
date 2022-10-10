@@ -69,7 +69,7 @@
                 {% endif %}
                 {% else %}
                 <div class="info__guild-name"><span style='color:white'>Archive</span></div>
-                {% if log_entry.recipient.name  %}
+                {% if log_entry.recipient.name %}
                 <div class="info__channel-topic">
                     <span style="color:white"><b>{{ log_entry.recipient.name | e }}</b></span>
                 </div>
@@ -101,8 +101,8 @@
                 </div>
 
                 <div class="chatlog__messages">
-                    <span class="chatlog__author-name"
-                        title="{{ group.author | string | e }}">{{ group.author.name | e }}</span>
+                    <span class="chatlog__author-name" title="{{ group.author | string | e }}">{{ group.author.name | e
+                        }}</span>
                     {% if group.type == 'thread_message' %}
                     {% if group.author.mod %}
                     <span class="mod-tag">Reply</span>
@@ -117,6 +117,8 @@
                     <span class='generic-tag'>After</span>
                     {% elif group.type == 'mention' %}
                     <span class='system-tag'>Mention</span>
+                    {% elif group.type == 'report' %}
+                    <span class='system-tag'>Message report</span>
                     {% endif %}
                     <span class="chatlog__timestamp">{{ group.created_at }}
                         {% if group.channel.id %}
@@ -154,8 +156,8 @@
                     <img class="chatlog__author-avatar" src="/static/img/system.png" alt="avatar">
                 </div>
                 <div class="chatlog__messages">
-                    <span class="chatlog__author-name"
-                        title="{{ log_entry.closer | string | e }}">{{ log_entry.closer.name }}</span>
+                    <span class="chatlog__author-name" title="{{ log_entry.closer | string | e }}">{{
+                        log_entry.closer.name }}</span>
                     {% if log_entry.closer.mod %}
                     <span>closed the thread</span>
                     <span class="system-tag">System</span>
