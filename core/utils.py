@@ -30,7 +30,10 @@ class User:
         return d
 
     def __str__(self):
-        return "{0.name}#{0.discriminator}".format(self)
+        if self.discriminator == "0":
+            return str(self.name)
+        else:
+            return "{0.name}#{0.discriminator}".format(self)
 
     @property
     def avatar_url(self):
@@ -59,12 +62,17 @@ class User:
     @property
     def default_avatar(self):
         """Returns the default avatar for a given user. This is calculated by the user's discriminator"""
-        return DefaultAvatar(int(self.discriminator) % len(DefaultAvatar))
+        if self.discriminator == "0":
+            DefaultAvatar((self.id >> 22) % len(DefaultAvatar))
+        else:
+            return DefaultAvatar(int(self.discriminator) % len(DefaultAvatar))
 
     @property
     def default_avatar_url(self):
         """Returns a URL for a user's default avatar."""
-        return "https://cdn.discordapp.com/embed/avatars/{}.png".format(self.default_avatar.value)
+        return "https://cdn.discordapp.com/embed/avatars/{}.png".format(
+            self.default_avatar.value
+        )
 
     @property
     def mention(self):
@@ -117,7 +125,9 @@ def authrequired():
             if any(int(r) in whitelist for r in roles):
                 return await func(request, document)
 
-            abort(401, message="Your account does not have permission to view this page.")
+            abort(
+                401, message="Your account does not have permission to view this page."
+            )
 
         return wrapper
 

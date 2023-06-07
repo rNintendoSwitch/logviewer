@@ -22,8 +22,12 @@
                 </li>
                 {% else %}
                 <li>
-                    <a class="dropdown-trigger waves-effect" href="#!"
-                        data-target="dropdown1">{{ user.name }}#{{ user.discriminator}}
+                    <a class="dropdown-trigger waves-effect" href="#!" data-target="dropdown1">
+                        {% if user.discriminator is eq '0' %}
+                        {{ user.name }}
+                        {% else %}
+                        {{ user.name }}#{{ user.discriminator }}
+                        {% endif %}
                         <img class='circle nav-icon' width='25px' src="{{ user.avatar_url }}"
                             onerror="this.src='{{ user.default_avatar_url }}'">
                     </a>
@@ -54,7 +58,13 @@
         <div class="background" style='background-color:#2D2F33'>
         </div>
         <a><img class="circle" src="{{ user.avatar_url }}"></a>
-        <a><span class="grey-text name"><b style='color:white'>{{ user.name}}</b>#{{ user.discriminator }}</span></a>
+        <a><span class="grey-text name">
+                {% if user.discriminator is eq '0' %}
+                <b style='color:white'>{{ user.name}}</b>
+                {% else %}
+                <b style='color:white'>{{ user.name}}</b>#{{ user.discriminator }}
+                {% endif %}
+            </span></a>
         <br>
     </div>
     <li><a href="/logout" class="waves-effect"><span class="grey-text">Logout</span></a></li>
