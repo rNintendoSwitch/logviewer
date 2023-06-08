@@ -63,7 +63,7 @@ class User:
     def default_avatar(self):
         """Returns the default avatar for a given user. This is calculated by the user's discriminator"""
         if self.discriminator == "0":
-            DefaultAvatar((self.id >> 22) % len(DefaultAvatar))
+            return DefaultAvatar((self.id >> 22) % len(DefaultAvatar))
         else:
             return DefaultAvatar(int(self.discriminator) % len(DefaultAvatar))
 
