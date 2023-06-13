@@ -132,7 +132,7 @@ class User:
     @property
     def default_avatar_url(self):
         if self.discriminator == "0":
-            filename = (self.id >> 22) % 5
+            filename = (self.id >> 22) % 6
         else:
             filename = int(self.discriminator) % 5
 
