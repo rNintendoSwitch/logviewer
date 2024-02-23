@@ -55,12 +55,7 @@ app.render_template = render_template
 
 @app.listener("before_server_start")
 async def init(app, loop):
-    if config.mongoUser and config.mongoPass:
-        mongo_uri = f"mongodb://{quote_plus(config.mongoUser)}:{quote_plus(config.mongoPass)}@{config.mongoHost}"
-    else:
-        mongo_uri = f"mongodb://{config.mongoHost}"
-
-    app.db = AsyncIOMotorClient(mongo_uri).modmail
+    app.db = AsyncIOMotorClient(config.mongoURI).modmail
     app.session = aiohttp.ClientSession(loop=loop)
     if app.using_oauth:
         app.guild_id = config.GUILD_ID

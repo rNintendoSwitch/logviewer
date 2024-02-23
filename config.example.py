@@ -1,6 +1,4 @@
-mongoUser = ''
-mongoPass = ''
-mongoHost = ''
+mongoURI = 'MongoDB URI'
 
 # Can contain User IDs and Role IDs. Leave empty to disable OAuth.
 OAUTH2_WHITELIST = []
