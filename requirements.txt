@@ -4,7 +4,7 @@ sanic~=19.3
 dnspython>=1.16.0
 natural
 sanic-session==0.5.1
-Jinja2==2.11.3
+Jinja2==3.1.4
 aiohttp
 discord-py==v1.7.3
 ujson
