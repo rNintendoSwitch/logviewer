@@ -23,7 +23,6 @@ class User:
         d = self.__dict__
         d["username"] = self.name
         d["avatar_url"] = self.avatar_url
-        d["default_avatar"] = self.default_avatar_url
         d["default_avatar_url"] = self.default_avatar_url
         d["mention"] = self.mention
         d["created_at"] = self.created_at.strftime("%Y-%m-%dT%H:%M:%S.%f%z")
@@ -60,18 +59,12 @@ class User:
         )
 
     @property
-    def default_avatar(self):
-        """Returns the default avatar for a given user. This is calculated by the user's discriminator"""
-        if self.discriminator == "0":
-            return DefaultAvatar((self.id >> 22) % 6)
-        else:
-            return DefaultAvatar(int(self.discriminator) % 5)
-
-    @property
     def default_avatar_url(self):
         """Returns a URL for a user's default avatar."""
         return "https://cdn.discordapp.com/embed/avatars/{}.png".format(
-            self.default_avatar.value
+            ((self.id >> 22) % 6)
+            if self.discriminator == "0"
+            else (int(self.discriminator) % 5)
         )
 
     @property
